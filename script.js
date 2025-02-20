@@ -9,13 +9,77 @@ play.addEventListener("click", (e) => {
   play.style = "display: none";
   playing.style = " ";
 
-  //playTone();
-
-
-  playMultiKeys();
+  playWithSilentGaps();
+  //playRepeatingNotes();
+  //playRandomPentonicScale();
+  //playAlternative();
+  //playMusic();
+  //playMultiKeys();
   //playScale();
-  // playTone();
+  //playTone();
 });
+
+function playWithSilentGaps() {
+
+  let synth = new Tone.Synth().toDestination();
+  new Tone.Sequence( (time, note) => {
+    synth.triggerAttackRelease(note, "16n", time);
+  }, ["C4", null, "B3", "C4", "G3", "A3", null, "B3"], "8n").start("0:0:0").stop("4:0:0");
+
+  Tone.Transport.start();
+}
+
+
+function playRepeatingNotes() {
+  Tone.start();
+  let synth = new Tone.Synth().toDestination();
+  new Tone.Sequence( (time, note) => {
+    synth.triggerAttackRelease(note, "16n", time);
+  }, ["G4", "C4", "C4", "C4"], "4n").start("0:0:0").stop("4:0:0");
+
+  Tone.Transport.start();
+}
+
+function playRandomPentonicScale() {
+  let synth = new Tone.PolySynth( Tone.Synth, {
+    oscillator: {type: "triangle"},
+    volume: -9
+  }).toDestination();
+
+  let notes = ["C4", "D4", "E4", "G4", "A4", "C5"];
+
+  new Tone.Loop( time => {
+    for(let i=0; i < 3; ++i) {
+      if(Math.random() < 0.5) {
+        let note = notes[Math.floor(Math.random() * notes.length)];
+        synth.triggerAttackRelease(note, "32n", time);
+        console.log(note);
+      }
+    }
+  }, "8n").start("0:0:0").stop("8:0:0");
+
+  Tone.Transport.start();
+}
+
+function playAlternative() {
+  let synth = new Tone.Synth().toDestination();
+  new Tone.Loop(time => {
+    synth.triggerAttackRelease("C4", "16n", time);
+  }, "4n").start("0:0:0").stop("4:0:0");
+  Tone.Transport.start();
+}
+
+function playMusic() {
+  let synth = new Tone.Synth().toDestination();
+  let loop = new Tone.Loop(time => {
+    synth.triggerAttackRelease("C4", "16n", time);
+  }, "4n");
+
+  loop.start("0:0:0");
+  loop.stop("4:0:0");
+
+  Tone.Transport.start();
+}
 
 function playMultiKeys() {
   Tone.start();
