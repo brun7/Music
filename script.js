@@ -9,7 +9,10 @@ play.addEventListener("click", (e) => {
   play.style = "display: none";
   playing.style = " ";
 
-  playWithSilentGaps();
+  playBandPass();
+  //playDrums();
+  //playTonePart();
+  //playWithSilentGaps();
   //playRepeatingNotes();
   //playRandomPentonicScale();
   //playAlternative();
@@ -18,6 +21,62 @@ play.addEventListener("click", (e) => {
   //playScale();
   //playTone();
 });
+
+function playBandPass() {
+  Tone.start();
+  let hiHatFilter = new Tone.Filter(15000, "bandpass").toDestination();
+
+  let hiHat = new Tone.NoiseSynth({
+    envelope: { attack: 0.001, decay: 0.1, sustain: 0, release: 0},
+    volume: -6
+  }).connect(hiHatFilter);
+
+  new Tone.Loop( time => {
+    hiHat.triggerAttackRelease("16n", time);
+  }, "8n").start("0:0:0").stop("4:0:0");
+
+  Tone.Transport.start();
+}
+
+function playDrums() {
+  Tone.start();
+
+  let hiHat = new Tone.NoiseSynth({
+    envelope: { attack: 0.001, decay: 0.1, sustain: 0, release: 0},
+    volume: -6
+  }).toDestination();
+
+  new Tone.Loop( time => {
+    hiHat.triggerAttackRelease("16n", time);
+  }, "8n").start("0:0:0").stop("4:0:0");
+
+  Tone.Transport.start();
+}
+
+function playTonePart() {
+  Tone.start();
+  let synth = new Tone.Synth().toDestination();
+
+  new Tone.Part((time,note) => {
+    synth.triggerAttackRelease(note, "16n", time);
+  }, [
+    ["0:0:0", ["C3", "E4"]],
+    ["0:0:3", "D4"],
+    ["0:1:0", "C4"],
+    ["0:1:2", "D4"],
+    ["0:2:0", ["E3", "E4"]],
+    ["0:2:2", "E4"],
+    ["0:3:0", "E4"],
+    ["1:0:0", ["G3", "D4"]],
+    ["1:0:2", "D4"],
+    ["1:1:0", "D4"],
+    ["1:2:0", ["E3", "E4"]],
+    ["1:2:2", "G4"],
+    ["1:3:0", "G4"]
+  ]).start("0:0:0");
+
+  Tone.Transport.start();
+}
 
 function playWithSilentGaps() {
 
